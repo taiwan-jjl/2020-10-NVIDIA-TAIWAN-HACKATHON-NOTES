@@ -63,5 +63,5 @@
         For the record, I do not consider keeping using the old MKL is a good solution but only as a workaround. 
 
 
-![image](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/wxVV0Rf.jpg)
+
 
