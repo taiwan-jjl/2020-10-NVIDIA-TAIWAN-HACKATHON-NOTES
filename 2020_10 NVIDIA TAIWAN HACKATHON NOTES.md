@@ -109,4 +109,13 @@
 
   * ### Traditional MPI VS. NVSHMEM
 
-  ![Traditional MPI VS. NVSHMEM](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mpi-nvshmem-explainer-diagram.svg)
+  ![Traditional MPI VS. NVSHMEM](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mpi-nvshmem-explainer-diagram.svg?raw=true)
+
+
+
+
+
+  * ### NCHC bashrc
+
+  * ### demo code
+  
