@@ -111,11 +111,76 @@
 
   ![Traditional MPI VS. NVSHMEM](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mpi-nvshmem-explainer-diagram.svg?raw=true)
 
+  * ### Requirements
 
-
-
+    * volta or newer
+    * CUDA 10.1 or newer
+    * and other dependencies
 
   * ### NCHC bashrc
 
+    ```bashrc
+    module purge
+    module load compiler/gnu/7.3.0
+    module load nvhpc/20.7
+    ```
+
   * ### demo code
+
+    ```C
+    #include <stdio.h>  //standard C header file
+    #include <cuda.h>  //CUDA header file
+    #include <nvshmem.h>  //nvshmem header file
+    #include <nvshmemx.h>  //nvshmem header file
+
+    //device kernel function 
+    __global__ void simple_shift(int *destination) {
+        int mype = nvshmem_my_pe();  //from
+        int npes = nvshmem_n_pes();  //total devices
+        int peer = (mype + 1) % npes;  //to
+
+        nvshmem_int_p(destination, mype, peer);  //from mype, put one integer mype, to peer at address destination
+    }
+
+    int main(void) {
+        int mype_node, msg;
+        cudaStream_t stream;  //Declares a stream handle
+
+        nvshmem_init();  //initialize nvshmem
+        mype_node = nvshmem_team_my_pe(NVSHMEMX_TEAM_NODE);  //return the index within the node
+        //NVSHMEMX_TEAM_NODE is a predefined named constant handle
+        cudaSetDevice(mype_node);  //monopolize one device for each thread
+        cudaStreamCreate(&stream);  //Allocates a stream
+
+        int *destination = (int *) nvshmem_malloc(sizeof(int));  //nvshmem memory operation
+
+        for(int i=1;i<=1000000;i++)  //just make it run longer
+        {
+
+        simple_shift<<<1, 1, 0, stream>>>(destination);
+        nvshmemx_barrier_all_on_stream(stream);  //synchronizing all PEs on stream at once
+        cudaMemcpyAsync(&msg, destination, sizeof(int), cudaMemcpyDeviceToHost, stream);
+        //on stream, asynchronous copy with respect to the host, from destination in device, to msg on host, sizeof(int)
+
+        cudaStreamSynchronize(stream);  //Blocks until stream has completed all operations
+
+        }
+
+        printf("%d: received message %d\n", nvshmem_my_pe(), msg);
+
+        nvshmem_free(destination);  //nvshmem memory operation
+        nvshmem_finalize();  //finalize nvshmem
+        return 0;
+    }
+
+    ```
   
+  * ### compile
+
+    `nvcc -rdc=true -ccbin gcc -gencode=arch=compute_70,code=sm_70 -I /opt/ohpc/twcc/hpc_sdk/Linux_x86_64/20.7/comm_libs/nvshmem/include ./jjl_nvshmem_demo.cu -o ./jjl_nvshmem_demo -L /opt/ohpc/twcc/hpc_sdk/Linux_x86_64/20.7/comm_libs/nvshmem/lib -lnvshmem -lcuda`
+
+  * ### run
+
+    `~/opt/bin/nvshmrun -n 8 -ppn 8 ./jjl_nvshmem_demo`
+
+    Due to technical issues, it is easier to build your own nvshmrun and run the demo.
