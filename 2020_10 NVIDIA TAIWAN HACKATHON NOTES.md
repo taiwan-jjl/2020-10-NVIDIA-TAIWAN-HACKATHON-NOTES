@@ -83,6 +83,21 @@
   Sadly, even NCHC could not handle this satisfying to me.
 
 * ## NCCL
+  
   It is a subset of the MPI standard but for GPUs. It only provides limited APIs and mostly focuses on the collective communication. Use it if you could find an API which fits your needs best.
 
+* ## The main programming language of NVIDIA GPU in the future
+
+  In this session, I would like to talk about the paradigm shift of programming language of NVIDIA GPU and its impact to us. As an end-user and developer, I find out that it is unstoppable and irreversible and it is us who have to adapt and accept this changes. It has its own reasons in the industry although it may not be needed in the academia community.  
+
+  At the beginning stage which I consider when there were only CUDA and PTX, the main languages in CUDA framework were C and FORTRAN. They were used to do the GPU programming directly and produce the libraries for further use. C and FORTRAN were equally supported and documents were written in both languages, especially, the sample codes. PTX plays a role as the fundamental instruction sets to the NVIDIA GPU devices and usually is used when the programmers really need to the control the device behavior at the lowest level.  
+
+  Then it came to the stage when there were directive programming model such as OpenACC and C++ template library such as Thrust, and the C++ language were supported by the NVIDIA compiler. At that time, CUDA was still the framework added on the ISO C and C++ language, not as a part of the language standard. Also, it showed in the documents and development of NVIDIA software ecosystem that more and more C++ was used as the main or even sole language. FORTRAN was still supported but mostly used in the fundamental and mathematical libraries. The biggest feature of this stage is that there are functionalities which could be used by the programmers only in C++ language. For example, `nvcuda::wmma` namespace first introduced in CUDA 9.0 2017 is a part of C++ language and not overlapped with C language. It is the only way for the programmers to use the tensor cores except the PTX and libraries. It means that C++ now is the only high level language which could use the full functionalities of NVIDIA GPU. It has a tremendous impact to the C language users and even a tocsin to the FORTRAN language users.
+
+  The third stage which I consider it started at 2020 began with the official support to the ISO C++ standard such as parallel algorithm and standard library since C++17. FORTRAN co-arrays and do-concurrent since FORTRAN 2018 are supported as well. The impact of the development is now programmers could use ISO C++ language standard alone, not ISO C++ and CUDA framework which uses kernel functions to offload to the GPU. Without CUDA framework, now the program could be more abstract, more general, more suitable for the heterogeneous computing. With the same source code, now it can be compiled and implemented into SIMD, multi-CPU, many-CPU, multi-GPU, multi-node, and even FPGA. It brings higher universality into the heterogeneous computing. Although it may not give the best performance when it specifically runs on the NVIDIA GPU compared to the same algorithm implemented in CUDA framework, the universality is still very attractive to the developers. Many modern FORTRAN features are also supported this time. However, the NVIDIA FORTRAN compiler is still buggy and cannot use the full functionalities as I mentioned above. I would say the future of FORTRAN for NVIDIA devices is not as promising as it looks. As for C language, due to its own language style, I would say it would be in the position between FORTRAN and C++, which is ambiguous in NVIDIA road map in the future.  
+
+  In the traditional science community, C and FORTRAN are still the main programming language and there are many many legacy codes still in operation. The scientists in new generations are still trained in these two languages as well. It will cause wider and wider gaps between the science community and the latest technology. In the long term, how to deal with the legacy codes; upgrade or remake; how to upgrade the training to the new generations are the issues the science community must face one day.
+
 * ## NVSHMEM
+  
+  
