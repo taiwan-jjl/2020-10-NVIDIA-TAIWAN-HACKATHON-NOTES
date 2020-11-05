@@ -25,7 +25,7 @@
 
 * ## cuRAND
 
-  * ### CPU version with Intel MKL:
+  * ### CPU version with Intel MKL
 
     VSL_BRNG_MT19937 (driver.c)  
     (A Mersenne Twister pseudorandom number generator.)
@@ -40,7 +40,7 @@
     Ref:  
     mkl-2018-developer-reference-c_0.pdf
 
-  * ### GPU version with NVIDIA cuRAND:
+  * ### GPU version with NVIDIA cuRAND
 
     `CURAND_RNG_PSEUDO_MT19937`  
     is the pseudo random number generator corresponding to the MKL one we use. However, the GPU one does not offer the same API format and parameters which are available in MKL. In general, it is still possible to implement the GPU version with the same PRNG algorithm and some coding work.
@@ -48,7 +48,7 @@
     Ref:  
     CURAND_Library.pdf, 2.1. Generator Types.
 
-  * ### The difficulty in parallel and distributed PRN generation:
+  * ### The difficulty in parallel and distributed PRN generation
   
     In order to accelerate the PRN generation further more, multi-GPU and multi-node method is a must. However, it runs into an issue which is the "offset" parameter.
 
@@ -62,7 +62,7 @@
 
     There is a possible solution which is to use another PRNG which offset parameter is available.
 
-  * ### PRNG quality test:
+  * ### PRNG quality test
   
     There is a chapter "Testing" in cuRAND document which gives a statistic quality test on the PRNGs. It is a good one and not offered in MKL document. It is worth reading.
 
@@ -71,4 +71,18 @@
     It is confirmed that DPLBE CPU version program cannot be compiled with MKL version later than 2018. It is because the API format is changed.  
     For the record, I do not consider keeping using the old MKL is a good solution but only as a workaround.
 
-test1234
+* ## NVTAGS
+
+  The concept is correct and a better approach is to address this issue when the main algorithm is implemented. Use NVTAGS to assist and gain a better node topology. It is not practical to limit the program only could run in a certain node topology because it is not available most of the time in real life .  
+  Also, the workload manager such as "slurm", the cluster hardware and topology are a part of this issue. It means that it cannot be addressed only by user level privilege but also administrator privilege.
+
+* ## MPI choice
+
+  Open MPI is officially supported by NVIDIA and the default library in "NVIDIA HPC SDK". However, if only the MPI performance itself is considered, especially not related to GPU, Open MPI is usually not the best one. There are many CPU-only clusters choose other MPI library like MVAPICH as their default.  
+  Another very important issue which most people do not pay enough attention to is to compile and install the driver and middle-ware, not just the MPI library itself, correctly. Whether the RDMA, UCX, and other components are compiled and installed correctly, it would play an important role for MPI library to reach its full potential.  
+  Sadly, even NCHC could not handle this satisfying to me.
+
+* ## NCCL
+  It is a subset of the MPI standard but for GPUs. It only provides limited APIs and mostly focuses on the collective communication. Use it if you could find an API which fits your needs best.
+
+* ## NVSHMEM
