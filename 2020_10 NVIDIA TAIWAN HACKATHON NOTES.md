@@ -86,9 +86,9 @@
   
   It is a subset of the MPI standard but for GPUs. It only provides limited APIs and mostly focuses on the collective communication. Use it if you could find an API which fits your needs best.
 
-* ## The main programming language of NVIDIA GPU in the future
+* ## The main programming language for NVIDIA GPU in the future
 
-  In this session, I would like to talk about the paradigm shift of programming language of NVIDIA GPU and its impact to us. As an end-user and developer, I find out that it is unstoppable and irreversible and it is us who have to adapt and accept this changes. It has its own reasons in the industry although it may not be needed in the academia community.  
+  In this session, I would like to talk about the paradigm shift of programming language for NVIDIA GPU and its impact to us. As an end-user and developer, I find out that it is unstoppable and irreversible and it is us who have to adapt and accept this changes. It has its own reasons in the industry although it may not be needed in the academia community.  
 
   At the beginning stage which I consider when there were only CUDA and PTX, the main languages in CUDA framework were C and FORTRAN. They were used to do the GPU programming directly and produce the libraries for further use. C and FORTRAN were equally supported and documents were written in both languages, especially, the sample codes. PTX plays a role as the fundamental instruction sets to the NVIDIA GPU devices and usually is used when the programmers really need to the control the device behavior at the lowest level.  
 
@@ -98,6 +98,12 @@
 
   In the traditional science community, C and FORTRAN are still the main programming language and there are many many legacy codes still in operation. The scientists in new generations are still trained in these two languages as well. It will cause wider and wider gaps between the science community and the latest technology. In the long term, how to deal with the legacy codes; upgrade or remake; how to upgrade the training to the new generations are the issues the science community must face one day.
 
-* ## NVSHMEM
+* ## TENSOR CORE PROGRAMMING MODELS
   
+  * DEEP LEARNING FRAMEWORKS
+  * CUDA LIBRARIES
+  * CUDA WMMA
+  * CUTLASS
+
+* ## NVSHMEM
   
