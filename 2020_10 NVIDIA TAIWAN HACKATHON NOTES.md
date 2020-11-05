@@ -107,3 +107,5 @@
 
 * ## NVSHMEM
   
+![model](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mem_model.png)
+
