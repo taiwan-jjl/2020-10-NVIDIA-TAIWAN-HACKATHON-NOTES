@@ -106,6 +106,7 @@
   * CUTLASS
 
 * ## NVSHMEM
-  
-![model](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mem_model.png)
 
+  * ### Traditional MPI VS. NVSHMEM
+
+  ![Traditional MPI VS. NVSHMEM](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mpi-nvshmem-explainer-diagram.svg)
