@@ -1,5 +1,7 @@
 # 2020/10 NVIDIA TAIWAN HACKATHON NOTES
 
+Author: Jyong-Jhih Lin, 2020/11/06
+
 * ## Pinned memory and Unified memory
 
   * "Pinned(page-locked) memory" means it is "unpageable" in host memory, different from GPU device memory. It can be accessed by "direct memory access(DMA)" which gives a better IO performance. However, it can only be accessed in the host.
