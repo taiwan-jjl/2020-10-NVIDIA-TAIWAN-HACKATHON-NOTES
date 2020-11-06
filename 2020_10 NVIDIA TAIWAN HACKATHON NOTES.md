@@ -196,3 +196,7 @@
     `~/opt/bin/nvshmrun -n 8 -ppn 8 ./jjl_nvshmem_demo`
 
     Due to technical issues, it is easier to build your own nvshmrun and run the demo.
+
+  * ### result
+    ![result1](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/20201106_1.png?raw=true)  
+    ![result2](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/20201106_2.png?raw=true)
