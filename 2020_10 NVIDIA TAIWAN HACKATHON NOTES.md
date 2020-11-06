@@ -110,6 +110,7 @@
   * ### Traditional MPI VS. NVSHMEM
 
   ![Traditional MPI VS. NVSHMEM](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mpi-nvshmem-explainer-diagram.svg?raw=true)
+  ![Memory Model](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/mem_model.png?raw=true)
 
   * ### Requirements
 
@@ -125,7 +126,9 @@
     module load nvhpc/20.7
     ```
 
-  * ### demo code
+  * ### Proof of Concept
+
+    ![demo](https://github.com/taiwan-jjl/2020-10-NVIDIA-TAIWAN-HACKATHON-NOTES/blob/main/pic/ring.png?raw=true)
 
     ```C
     #include <stdio.h>  //standard C header file
@@ -133,13 +136,18 @@
     #include <nvshmem.h>  //nvshmem header file
     #include <nvshmemx.h>  //nvshmem header file
 
-    //device kernel function 
+    //device kernel function
     __global__ void simple_shift(int *destination) {
         int mype = nvshmem_my_pe();  //from
         int npes = nvshmem_n_pes();  //total devices
         int peer = (mype + 1) % npes;  //to
 
         nvshmem_int_p(destination, mype, peer);  //from mype, put one integer mype, to peer at address destination
+    }
+
+    __global__ void check(int *destination) {  //check in device
+        printf("%p: pe%d destination pointer\n", destination, nvshmem_my_pe());
+        printf("%d: pe%d destination value\n", *destination, nvshmem_my_pe());
     }
 
     int main(void) {
@@ -154,10 +162,13 @@
 
         int *destination = (int *) nvshmem_malloc(sizeof(int));  //nvshmem memory operation
 
+        check<<<1, 1, 0, stream>>>(destination);  //verify nvshmem operation
+
         for(int i=1;i<=1000000;i++)  //just make it run longer
         {
 
-        simple_shift<<<1, 1, 0, stream>>>(destination);
+        simple_shift<<<1, 1, 0, stream>>>(destination);  //NVIDIA GPU device kernel function
+        //kernel<<<number of blocks, number of threads per block, number of bytes in shared memory, associated stream>>> ; Execution Configuration
         nvshmemx_barrier_all_on_stream(stream);  //synchronizing all PEs on stream at once
         cudaMemcpyAsync(&msg, destination, sizeof(int), cudaMemcpyDeviceToHost, stream);
         //on stream, asynchronous copy with respect to the host, from destination in device, to msg on host, sizeof(int)
@@ -166,13 +177,14 @@
 
         }
 
+        check<<<1, 1, 0, stream>>>(destination);  //verify nvshmem operation
+
         printf("%d: received message %d\n", nvshmem_my_pe(), msg);
 
         nvshmem_free(destination);  //nvshmem memory operation
         nvshmem_finalize();  //finalize nvshmem
         return 0;
     }
-
     ```
   
   * ### compile
